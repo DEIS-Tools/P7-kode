@@ -32,9 +32,22 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(EXT_LIBRARY_INSTALL_PATH ${PROJECT_SOURCE_DIR}/build)
+#set(EXT_LIBRARY_INSTALL_PATH ${PROJECT_SOURCE_DIR}/build)
+set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# set(JSONCPP_ARCHIVE ${PROJECT_SOURCE_DIR}/lib/jsoncpp/libjsoncpp.a)
+option(GetDependencies "Fetch external dependencies from web." ON)
+if (GetDependencies)
+    ExternalProject_add(json-ext
+            URL https://github.com/open-source-parsers/jsoncpp/archive/1.9.2.zip
+            CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION} -DJSONCPP_WITH_TESTS=OFF -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF -DJSONCPP_WITH_WARNING_AS_ERROR=OFF -DJSONCPP_WITH_STRICT_ISO=OFF -DJSONCPP_WITH_PKGCONFIG_SUPPORT=OFF -DJSONCPP_WITH_CMAKE_PACKAGE=OFF -DBUILD_SHARED_LIBS=OFF
+            )
+
+    include_directories(${EXTERNAL_INSTALL_LOCATION}/include)
+    link_directories(${EXTERNAL_INSTALL_LOCATION}/lib)
+endif (GetDependencies)
+
+
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/lib/jsoncpp/include
@@ -48,7 +61,7 @@ include_directories(
 )
 
 # Libraries
-add_subdirectory(lib)
+#add_subdirectory(lib)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
