@@ -30,3 +30,6 @@ set_target_properties(config PROPERTIES LINK_FLAGS "-rdynamic")
 #install(TARGETS config DESTINATION bin)
 add_dependencies(config json-ext)
 target_link_libraries(config jsoncpp)
+
+install(TARGETS config
+        LIBRARY DESTINATION lib)
